@@ -632,6 +632,8 @@ const QVector<ConfigurationSchemaEntry> kRawEntries = {
     {QStringLiteral("global_mouse/screenshot_translation"), QJsonObject(),
      ConfigurationValueKind::Structured},
 #endif
+    {QStringLiteral("global_mouse/screenshot_markdown"), QJsonObject(),
+     ConfigurationValueKind::Structured},
     {QStringLiteral("global_mouse/screenshot_quick_save"), QJsonObject(),
      ConfigurationValueKind::Structured},
     {QStringLiteral("global_mouse/screenshot_save"), QJsonObject(),

@@ -154,6 +154,8 @@ QString globalMouseKey(SettingsGlobalMouseAction action) {
         return QStringLiteral("global_mouse/screen_recording");
     case SettingsGlobalMouseAction::ScreenshotSave:
         return QStringLiteral("global_mouse/screenshot_save");
+    case SettingsGlobalMouseAction::ScreenshotConvertMarkdown:
+        return QStringLiteral("global_mouse/screenshot_markdown");
     }
     Q_UNREACHABLE_RETURN(QString());
 }
@@ -2491,7 +2493,8 @@ bool BuiltInSettingsBackend::resetSection(SettingsSectionReset reset) {
               SettingsGlobalMouseAction::ScreenshotTranslation,
               SettingsGlobalMouseAction::ScreenshotSave,
               SettingsGlobalMouseAction::ScreenshotQuickSave,
-              SettingsGlobalMouseAction::ScreenRecording}) {
+              SettingsGlobalMouseAction::ScreenRecording,
+              SettingsGlobalMouseAction::ScreenshotConvertMarkdown}) {
             const QString key = globalMouseKey(action);
             if (storage::ConfigurationSchema::contains(key))
                 values.insert(key, storage::ConfigurationSchema::defaultValue(key));

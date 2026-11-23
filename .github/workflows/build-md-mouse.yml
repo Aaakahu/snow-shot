@@ -1,0 +1,25 @@
+name: Build Snow Shot (mouse markdown action)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Package (stage only)
+        shell: pwsh
+        run: pwsh -File scripts/package-snow-shot.ps1 -StageOnly -Parallelism 8
+      - name: Upload staged app
+        uses: actions/upload-artifact@v4
+        with:
+          name: snow-shot-win64-mdmouse
+          path: artifacts/snow-shot
+          if-no-files-found: error

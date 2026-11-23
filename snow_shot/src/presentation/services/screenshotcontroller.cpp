@@ -6267,6 +6267,9 @@ bool ScreenshotController::beginGlobalMouseCapture(
     case Action::ScreenRecording:
         pending = Impl::PendingSelectionAction::StartVideo;
         break;
+    case Action::ScreenshotConvertMarkdown:
+        pending = Impl::PendingSelectionAction::ConvertMarkdown;
+        break;
     default:
         return false;
     }

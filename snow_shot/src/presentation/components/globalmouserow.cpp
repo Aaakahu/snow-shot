@@ -45,6 +45,8 @@ adqt::icons::IconRef actionIcon(settings::SettingsGlobalMouseAction action) {
         return custom_outlined_icons::QuickSave();
     case settings::SettingsGlobalMouseAction::ScreenRecording:
         return custom_outlined_icons::RecordScreen();
+    case settings::SettingsGlobalMouseAction::ScreenshotConvertMarkdown:
+        return custom_outlined_icons::TextRecognition();
     }
     return {};
 }

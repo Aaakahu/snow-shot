@@ -35,7 +35,8 @@ struct GlobalMouseManager::Impl {
             std::pair{Action::ScreenshotTranslation, "global_mouse/screenshot_translation"},
             std::pair{Action::ScreenshotSave, "global_mouse/screenshot_save"},
             std::pair{Action::ScreenshotQuickSave, "global_mouse/screenshot_quick_save"},
-            std::pair{Action::ScreenRecording, "global_mouse/screen_recording"}};
+            std::pair{Action::ScreenRecording, "global_mouse/screen_recording"},
+            std::pair{Action::ScreenshotConvertMarkdown, "global_mouse/screenshot_markdown"}};
         auto& store = storage::ApplicationStorage::instance().configuration();
         for (const auto& [action, key] : pairs) {
             const auto value = store.value(QString::fromLatin1(key)).toObject();

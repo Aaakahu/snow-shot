@@ -53,6 +53,7 @@ FeatureFamily featureFamilyFor(presentation::settings::SettingsGlobalMouseAction
     case Action::ScreenshotTranslation:
     case Action::ScreenshotQuickSave:
     case Action::ScreenshotSave:
+    case Action::ScreenshotConvertMarkdown:
         return FeatureFamily::Screenshot;
     }
     return FeatureFamily::Screenshot;

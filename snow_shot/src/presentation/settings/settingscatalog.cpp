@@ -3149,6 +3149,10 @@ QVector<SettingsPageDefinition> builtInPages() {
                                         QT_TRANSLATE_NOOP("SettingsCatalog", "Quick save"),
                                         SettingsGlobalMouseAction::ScreenshotQuickSave,
                                         QStringLiteral("global_mouse/screenshot_quick_save")),
+                        globalMouseItem(QStringLiteral("global-mouse.screenshot-markdown"),
+                                        QT_TRANSLATE_NOOP("SettingsCatalog", "Convert to Markdown"),
+                                        SettingsGlobalMouseAction::ScreenshotConvertMarkdown,
+                                        QStringLiteral("global_mouse/screenshot_markdown")),
                     },
                     SettingsSectionItemLayout::VerticalList,
                 },
@@ -4240,6 +4244,8 @@ QString globalMouseConfigurationKey(SettingsGlobalMouseAction action) {
         return QStringLiteral("global_mouse/screen_recording");
     case SettingsGlobalMouseAction::ScreenshotSave:
         return QStringLiteral("global_mouse/screenshot_save");
+    case SettingsGlobalMouseAction::ScreenshotConvertMarkdown:
+        return QStringLiteral("global_mouse/screenshot_markdown");
     }
     return {};
 }
