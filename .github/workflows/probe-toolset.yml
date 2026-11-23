@@ -1,0 +1,19 @@
+name: Probe MSVC toolset
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: windows-2025-vs2026
+    steps:
+      - name: List MSVC toolsets
+        shell: pwsh
+        run: |
+          Get-ChildItem "C:\Program Files\Microsoft Visual Studio" -Directory | ForEach-Object { $_.FullName }
+          $roots = @("C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC",
+                     "C:\Program Files\Microsoft Visual Studio\17\Enterprise\VC\Tools\MSVC")
+          foreach ($r in $roots) {
+            if (Test-Path $r) { Write-Host "== $r"; Get-ChildItem $r -Directory | ForEach-Object { Write-Host $_.Name } }
+         
+          }

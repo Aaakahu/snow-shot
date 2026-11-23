@@ -581,12 +581,13 @@ function Add-SnowMsvcToolsToPath {
     $env:VSINSTALLDIR = [System.IO.Path]::GetFullPath($visualStudioRoot)
     $env:VCINSTALLDIR = Join-Path $env:VSINSTALLDIR "VC"
     $msvcTools = Get-ChildItem -LiteralPath (Join-Path $env:VCINSTALLDIR "Tools\MSVC") -Directory |
-        Where-Object { $_.Name -match '^14\.51' } |
+        Where-Object { $_.Name -match '^14\.5' } |
         Sort-Object Name -Descending |
         Select-Object -First 1
     if (-not $msvcTools) {
-        throw "MSVC toolset $script:SnowMsvcToolset was not found under $env:VCINSTALLDIR."
+        throw "MSVC toolset 14.5x was not found under $env:VCINSTALLDIR."
     }
+    $script:SnowMsvcToolset = ($msvcTools.Name -split '\.')[0..1] -join '.'
 
     $env:VCToolsInstallDir = "$($msvcTools.FullName)\"
     $msvcBin = Join-Path $msvcTools.FullName "bin\Host$hostArchitecture\$Architecture"
