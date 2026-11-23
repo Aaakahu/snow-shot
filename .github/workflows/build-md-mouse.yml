@@ -40,7 +40,10 @@ jobs:
           } finally { Pop-Location }
       - name: Build static Qt 6.12
         shell: pwsh
-        run: pwsh -File scripts/build-static-qt.ps1 -InstallPrefix D:/qt6-static -Parallelism 8
+        run: |
+          New-Item -ItemType Directory -Force "$env:RUNNER_TEMP/snow-qt-6.12.0-x64" | Out-Null
+          New-Item -ItemType Directory -Force "$env:RUNNER_TEMP/qt-build-6.12.0-x64-static-system-codecs-no-timezone-locale-release" | Out-Null
+          pwsh -File scripts/build-static-qt.ps1 -InstallPrefix D:/qt6-static -Parallelism 8
       - name: Compress Qt toolchain
         shell: pwsh
         run: Compress-Archive -Path D:/qt6-static -DestinationPath qt6-static.zip
