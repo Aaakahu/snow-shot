@@ -76,7 +76,7 @@ jobs:
         shell: pwsh
         run: |
           Expand-Archive -Path qt-download/qt6-static.zip -DestinationPath D:/
-          if (-not (Test-Path D:/qt6-static/bin/qmake.exe)) { throw "qmake missing" }
+          if (-not (Test-Path D:/qt6-static/lib/cmake/Qt6/Qt6Config.cmake)) { throw "Qt6Config.cmake missing" }
       - name: Package Snow Shot
         shell: pwsh
         env:
