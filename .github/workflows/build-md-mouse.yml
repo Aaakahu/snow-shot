@@ -26,13 +26,16 @@ jobs:
           $overlays = @(Get-ChildItem "$repo/cmake/vcpkg-overlay-ports" -Directory |
               Where-Object { Test-Path "$($_.FullName)/portfile.cmake" } |
               ForEach-Object { "--overlay-ports=$($_.FullName)" })
-          & "$repo/.tools/vcpkg/vcpkg.exe" install zlib libpng `
-              --triplet x64-windows-static --host-triplet x64-windows `
-              "--x-install-root=$repo/.tools/vcpkg/installed/static" `
-              @overlays `
-              "--overlay-triplets=$repo/cmake/vcpkg-overlay-triplets" `
-              --disable-metrics
-          if ($LASTEXITCODE -ne 0) { throw "vcpkg zlib/libpng install failed" }
+          Push-Location $env:RUNNER_TEMP
+          try {
+              & "$repo/.tools/vcpkg/vcpkg.exe" install zlib libpng `
+                  --triplet x64-windows-static --host-triplet x64-windows `
+                  "--x-install-root=$repo/.tools/vcpkg/installed/static" `
+                  @overlays `
+                  "--overlay-triplets=$repo/cmake/vcpkg-overlay-triplets" `
+                  --disable-metrics
+              if ($LASTEXITCODE -ne 0) { throw "vcpkg zlib/libpng install failed" }
+          } finally { Pop-Location }
       - name: Build static Qt 6.12
         shell: pwsh
         run: pwsh -File scripts/build-static-qt.ps1 -InstallPrefix D:/qt6-static -Parallelism 8
