@@ -10,10 +10,29 @@ jobs:
   qt:
     runs-on: windows-2025-vs2026
     timeout-minutes: 350
+    env:
+      VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
     steps:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Bootstrap vcpkg (no deps)
+        shell: pwsh
+        run: pwsh -File scripts/bootstrap.ps1 -VcpkgVariants Static -SkipDependencyInstall -SkipQtValidation
+      - name: Install zlib/libpng for Qt
+        shell: pwsh
+        run: |
+          $repo = "${env:GITHUB_WORKSPACE}"
+          $overlays = @(Get-ChildItem "$repo/cmake/vcpkg-overlay-ports" -Directory |
+              Where-Object { Test-Path "$($_.FullName)/portfile.cmake" } |
+              ForEach-Object { "--overlay-ports=$($_.FullName)" })
+          & "$repo/.tools/vcpkg/vcpkg.exe" install zlib libpng `
+              --triplet x64-windows-static --host-triplet x64-windows `
+              "--x-install-root=$repo/.tools/vcpkg/installed/static" `
+              @overlays `
+              "--overlay-triplets=$repo/cmake/vcpkg-overlay-triplets" `
+              --disable-metrics
+          if ($LASTEXITCODE -ne 0) { throw "vcpkg zlib/libpng install failed" }
       - name: Build static Qt 6.12
         shell: pwsh
         run: pwsh -File scripts/build-static-qt.ps1 -InstallPrefix D:/qt6-static -Parallelism 8
@@ -49,7 +68,7 @@ jobs:
         shell: pwsh
         run: |
           Expand-Archive -Path qt-download/qt6-static.zip -DestinationPath D:/
-          Test-Path D:/qt6-static/bin/qmake.exe
+          if (-not (Test-Path D:/qt6-static/bin/qmake.exe)) { throw "qmake missing" }
       - name: Package Snow Shot
         shell: pwsh
         env:
