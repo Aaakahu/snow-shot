@@ -2,12 +2,22 @@ name: Build Snow Shot (mouse markdown action)
 
 on:
   workflow_dispatch:
+    inputs:
+      rebuild_qt:
+        description: Rebuild static Qt (slow). Off = reuse the artifact from qt_run_id.
+        type: boolean
+        default: false
+      qt_run_id:
+        description: Workflow run that holds the qt6-static artifact
+        type: string
+        default: "45126146659"
 
 permissions:
   contents: read
 
 jobs:
   qt:
+    if: ${{ inputs.rebuild_qt }}
     runs-on: windows-2025-vs2026
     timeout-minutes: 350
     env:
@@ -56,6 +66,7 @@ jobs:
 
   app:
     needs: qt
+    if: ${{ needs.qt.result != 'failure' }}
     runs-on: windows-2025-vs2026
     timeout-minutes: 350
     env:
@@ -67,11 +78,20 @@ jobs:
       - name: Install NSIS
         shell: pwsh
         run: choco install nsis -y --no-progress
-      - name: Download Qt toolchain
+      - name: Download Qt toolchain (built in this run)
+        if: ${{ inputs.rebuild_qt }}
         uses: actions/download-artifact@v5
         with:
           name: qt6-static
           path: qt-download
+      - name: Download Qt toolchain (from cached run)
+        if: ${{ !inputs.rebuild_qt }}
+        uses: actions/download-artifact@v5
+        with:
+          name: qt6-static
+          path: qt-download
+          run-id: ${{ inputs.qt_run_id }}
+          github-token: ${{ github.token }}
       - name: Expand Qt toolchain
         shell: pwsh
         run: |
@@ -80,7 +100,7 @@ jobs:
       - name: Package Snow Shot
         shell: pwsh
         env:
-          SNOW_QT_STATIC_DIR: D:/qt6-static
+          SNOW_QT_STATIC_DIR: D:/qt6-static/lib/cmake/Qt6
         run: pwsh -File scripts/package-snow-shot.ps1 -Parallelism 8
       - name: Upload staged app
         uses: actions/upload-artifact@v4
