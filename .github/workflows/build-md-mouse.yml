@@ -23,6 +23,8 @@ jobs:
         shell: pwsh
         run: |
           $repo = "${env:GITHUB_WORKSPACE}"
+          . (Join-Path $repo "scripts/snow-build-environment.ps1")
+          Add-SnowMsvcToolsToPath -Architecture x64 | Out-Null
           $overlays = @(Get-ChildItem "$repo/cmake/vcpkg-overlay-ports" -Directory |
               Where-Object { Test-Path "$($_.FullName)/portfile.cmake" } |
               ForEach-Object { "--overlay-ports=$($_.FullName)" })
