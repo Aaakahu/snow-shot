@@ -14,9 +14,12 @@ jobs:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Package (stage only)
+      - name: Install NSIS
         shell: pwsh
-        run: pwsh -File scripts/package-snow-shot.ps1 -StageOnly -Parallelism 8
+        run: choco install nsis -y --no-progress
+      - name: Package
+        shell: pwsh
+        run: pwsh -File scripts/package-snow-shot.ps1 -Parallelism 8
       - name: Upload staged app
         uses: actions/upload-artifact@v4
         with:
