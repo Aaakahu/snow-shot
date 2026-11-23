@@ -7,9 +7,32 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  qt:
     runs-on: windows-2025-vs2026
     timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Build static Qt 6.12
+        shell: pwsh
+        run: pwsh -File scripts/build-static-qt.ps1 -InstallPrefix D:/qt6-static -Parallelism 8
+      - name: Compress Qt toolchain
+        shell: pwsh
+        run: Compress-Archive -Path D:/qt6-static -DestinationPath qt6-static.zip
+      - name: Upload Qt toolchain
+        uses: actions/upload-artifact@v4
+        with:
+          name: qt6-static
+          path: qt6-static.zip
+          if-no-files-found: error
+
+  app:
+    needs: qt
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 350
+    env:
+      VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
     steps:
       - uses: actions/checkout@v5
         with:
@@ -17,8 +40,20 @@ jobs:
       - name: Install NSIS
         shell: pwsh
         run: choco install nsis -y --no-progress
-      - name: Package
+      - name: Download Qt toolchain
+        uses: actions/download-artifact@v5
+        with:
+          name: qt6-static
+          path: qt-download
+      - name: Expand Qt toolchain
         shell: pwsh
+        run: |
+          Expand-Archive -Path qt-download/qt6-static.zip -DestinationPath D:/
+          Test-Path D:/qt6-static/bin/qmake.exe
+      - name: Package Snow Shot
+        shell: pwsh
+        env:
+          SNOW_QT_STATIC_DIR: D:/qt6-static
         run: pwsh -File scripts/package-snow-shot.ps1 -Parallelism 8
       - name: Upload staged app
         uses: actions/upload-artifact@v4
