@@ -3,7 +3,7 @@
 # independently of the target selected by the parent PowerShell process.
 set(VCPKG_LOAD_VCVARS_ENV ON)
 set(VCPKG_PLATFORM_TOOLSET v145)
-set(VCPKG_PLATFORM_TOOLSET_VERSION 14.51)
+set(VCPKG_PLATFORM_TOOLSET_VERSION 14.52)
 if(NOT "$ENV{VSINSTALLDIR}" STREQUAL "")
     file(TO_NATIVE_PATH "$ENV{VSINSTALLDIR}" _snow_visual_studio_path)
     string(REGEX REPLACE "[/\\]+$" "" _snow_visual_studio_path
@@ -19,5 +19,5 @@ set(VCPKG_ENV_PASSTHROUGH_UNTRACKED
 list(APPEND VCPKG_HASH_ADDITIONAL_FILES "${CMAKE_CURRENT_LIST_FILE}")
 get_filename_component(_snow_repo_root "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE
-    "${_snow_repo_root}/cmake/vcpkg-msvc-145-14.51-toolchain.cmake")
+    "${_snow_repo_root}/cmake/vcpkg-msvc-145-14.52-toolchain.cmake")
 unset(_snow_repo_root)

@@ -55,7 +55,7 @@ if(_snow_msvc_145_root STREQUAL "")
             ERROR_QUIET
         )
         file(GLOB _snow_msvc_candidates
-            "${_snow_vs_install}/VC/Tools/MSVC/14.51.*")
+            "${_snow_vs_install}/VC/Tools/MSVC/14.52.*")
         list(SORT _snow_msvc_candidates COMPARE NATURAL ORDER DESCENDING)
         list(LENGTH _snow_msvc_candidates _snow_msvc_count)
         if(_snow_msvc_count GREATER 0)
@@ -65,7 +65,7 @@ if(_snow_msvc_145_root STREQUAL "")
 endif()
 if(_snow_msvc_145_root STREQUAL "")
     message(FATAL_ERROR
-        "MSVC 14.51 was not found. Set VCToolsInstallDir or install ${_snow_msvc_component}.")
+        "MSVC 14.52 was not found. Set VCToolsInstallDir or install ${_snow_msvc_component}.")
 endif()
 string(REGEX REPLACE "[/\\]+$" "" _snow_msvc_145_root "${_snow_msvc_145_root}")
 file(TO_CMAKE_PATH "${_snow_msvc_145_root}" _snow_msvc_145_root)
