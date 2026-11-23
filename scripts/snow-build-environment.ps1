@@ -91,8 +91,8 @@ function Get-SnowWindowsTarget {
         Configuration = $configuration
         IsStatic = [bool]$static
         GeneratorPlatform = if ($Architecture -eq "arm64") { "ARM64" } else { "x64" }
-        Toolset = if ($Architecture -eq "arm64") { "version=14.51" }
-            else { "host=x64,version=14.51" }
+        Toolset = if ($Architecture -eq "arm64") { "version=14.52" }
+            else { "host=x64,version=14.52" }
     }
 }
 
